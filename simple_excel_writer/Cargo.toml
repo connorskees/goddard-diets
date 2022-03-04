@@ -1,0 +1,20 @@
+[package]
+name = "simple_excel_writer"
+description = "Simple Excel Writer"
+version = "0.1.9"
+authors = ["outersky <outersky@gmail.com>"]
+license = "Apache-2.0"
+homepage="https://github.com/outersky/simple_excel_writer"
+repository="https://github.com/outersky/simple_excel_writer"
+documentation="https://docs.rs/simple_excel_writer/"
+readme = "README.md"
+keywords = ["excel", "xls", "xlsx", "office"]
+categories = ["encoding", "text-processing"]
+
+[badges]
+travis-ci = { repository = "outersky/simple_excel_writer" }
+
+[dependencies]
+chrono = { version = "0.4.19", optional = true, default-features = false }
+# omit bzip2 feature
+zip = {version = "0.5.13", default-features = false, features = ["deflate"] }
