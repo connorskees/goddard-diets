@@ -30,7 +30,7 @@ impl<'a> Index<&str> for Row<'a> {
             .position(|header| header == &DataType::String(index.to_owned()))
             .unwrap();
 
-        return &self.row[col_idx];
+        &self.row[col_idx]
     }
 }
 
@@ -87,6 +87,7 @@ impl DataFrame {
             .unwrap()
     }
 
+    #[must_use]
     pub fn filter_by_col(&self, col: &str, predicate: impl Fn(&DataType) -> bool) -> DataFrame {
         let col_idx = self.idx_for_column(col);
 
@@ -102,9 +103,10 @@ impl DataFrame {
             Array2::from_shape_vec((filtered_rows.len() / self.cols, self.cols), filtered_rows)
                 .unwrap();
 
-        return DataFrame::with_header(self.header.clone(), df);
+        DataFrame::with_header(self.header.clone(), df)
     }
 
+    #[must_use]
     pub fn drop_columns(&self, cols: &[&str]) -> DataFrame {
         let new_cols = self
             .header
@@ -127,6 +129,7 @@ impl DataFrame {
         self
     }
 
+    #[must_use]
     pub fn map_col(&self, col: &str, f: impl Fn(Row<'_>) -> DataType) -> DataFrame {
         let col_idx = self.idx_for_column(col);
 
@@ -142,33 +145,33 @@ impl DataFrame {
         df
     }
 
+    #[must_use]
     pub fn subselect_cols(&self, cols: &[&str]) -> DataFrame {
         let header_idxs = cols
-            .into_iter()
+            .iter()
             .map(|desired_header| self.idx_for_column(desired_header))
             .collect::<Vec<_>>();
 
         let rows = self
             .arr
             .outer_iter()
-            .map(|row| {
+            .flat_map(|row| {
                 header_idxs
                     .iter()
                     .map(|&idx| row[idx].clone())
                     .collect::<Vec<_>>()
             })
-            .flatten()
             .collect::<Vec<_>>();
 
         let df = Array2::from_shape_vec((rows.len() / header_idxs.len(), header_idxs.len()), rows)
             .unwrap();
 
-        return DataFrame::with_header(
-            cols.into_iter()
+        DataFrame::with_header(
+            cols.iter()
                 .map(|&col| DataType::String(col.to_owned()))
                 .collect(),
             df,
-        );
+        )
     }
 }
 

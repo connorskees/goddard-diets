@@ -9,14 +9,8 @@ edition = "2021"
 path = "src/lib.rs"
 crate-type = ["cdylib"]
 
-[[bin]]
-name = "main"
-path = "src/main.rs"
-
-
 [dependencies]
 calamine = "0.18.0"
 ndarray = "0.15.4"
 simple_excel_writer = { path = "./simple_excel_writer" }
 wasm-bindgen = "0.2.79"
-# xlsxwriter = "0.3.5"

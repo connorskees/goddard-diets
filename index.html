@@ -37,7 +37,7 @@
         let execute;
     </script>
     <div>
-        <input id="file-upload" onchange="execute()" type="file" />
+        <input id="file-upload" accept=".xlsx" onchange="execute()" type="file" />
 
         <a id="download">Download</a>
     </div>
@@ -58,7 +58,7 @@
                         const downloadButton = document.getElementById("download");
 
                         downloadButton.href = `data:text/plain;base64,${btoa(String.fromCharCode.apply(null, main(contents)))}`
-                        downloadButton.download = `${new Date().toISOString()}.xlsx`;
+                        downloadButton.download = `Goddard_Diet_${new Date().toISOString()}.xlsx`;
 
                         downloadButton.click();
                     }
