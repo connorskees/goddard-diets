@@ -1,0 +1,12 @@
+{
+  "name": "goddard-diets",
+  "version": "0.1.0",
+  "files": [
+    "goddard_diets_bg.wasm",
+    "goddard_diets.js",
+    "goddard_diets.d.ts"
+  ],
+  "module": "goddard_diets.js",
+  "types": "goddard_diets.d.ts",
+  "sideEffects": false
+}
