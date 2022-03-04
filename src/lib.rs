@@ -3,12 +3,10 @@ use std::{
     ops::Index,
 };
 
-use calamine::{open_workbook, DataType, Reader, Xlsx};
+use calamine::{DataType, Reader, Xlsx};
 use ndarray::{Array2, Axis};
-use wasm_bindgen::prelude::*;
-// use xlsxwriter::Workbook;
-use simple_excel_writer::sheet::ToCellValue;
 use simple_excel_writer::{Row as ExcelRow, Workbook};
+use wasm_bindgen::prelude::*;
 
 #[derive(Clone)]
 pub struct DataFrame {
@@ -183,15 +181,6 @@ extern "C" {
 pub fn main(buffer: &[u8]) -> Vec<u8> {
     let workbook = Xlsx::new(BufReader::new(std::io::Cursor::new(buffer))).unwrap();
 
-    // match workbook {
-    //     Ok(..) => {}
-    //     Err(e) => {
-    //         unsafe { alert(&format!("{:?}", e)) };
-    //     }
-    // }
-
-    // // open_workbook("/Users/user/Downloads/All guests_Connor.xlsx").expect("Cannot open file");
-
     let df = DataFrame::from_xlsx(workbook);
 
     let attendees_with_guest = df.filter_by_col("haveguest", |has_guest| {
@@ -224,9 +213,6 @@ pub fn main(buffer: &[u8]) -> Vec<u8> {
 
     attendees_with_allergies.concat(all_guests);
 
-    // unsafe { alert(&attendees_with_allergies.arr.len().to_string()) }
-
-    // // let workbook = Workbook::new("simple1.xlsx");
     let mut wb = Workbook::create_in_memory();
 
     let mut sheet = wb.create_sheet("SheetName");
@@ -238,7 +224,6 @@ pub fn main(buffer: &[u8]) -> Vec<u8> {
             let mut excel_row = ExcelRow::new();
 
             for col in row.columns().into_iter().next().unwrap() {
-                // dbg!(col)
                 match col {
                     DataType::String(text) => excel_row.add_cell(text.as_str()),
                     &DataType::Float(number) => excel_row.add_cell(number),
@@ -254,33 +239,7 @@ pub fn main(buffer: &[u8]) -> Vec<u8> {
 
         Ok(())
     })
-    .expect("write excel error!");
+    .unwrap();
 
-    // // let mut sheet1 = workbook.add_worksheet(None).unwrap();
-
-    // // for (col_idx, col) in attendees_with_allergies
-    // //     .arr
-    // //     .columns()
-    // //     .into_iter()
-    // //     .enumerate()
-    // // {
-    // //     let row = col.rows().into_iter().next().unwrap();
-
-    // //     for (row_idx, row) in row.into_iter().enumerate() {
-    // //         dbg!(row_idx, col_idx);
-    // //         match row {
-    // //             DataType::String(text) => sheet1
-    // //                 .write_string(row_idx as u32, col_idx as u16, text, None)
-    // //                 .unwrap(),
-    // //             &DataType::Float(number) => sheet1
-    // //                 .write_number(row_idx as u32, col_idx as u16, number, None)
-    // //                 .unwrap(),
-    // //             DataType::Empty => continue,
-    // //             d => todo!("{:?}", d),
-    // //         }
-    // //     }
-    // // }
-
-    // unsafe { alert(&format!("{:?}", wb.close())) };
-    return wb.close().unwrap().unwrap();
+    wb.close().unwrap().unwrap()
 }
