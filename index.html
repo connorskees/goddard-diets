@@ -27,7 +27,7 @@
         }
 
         a {
-
+            display: none;
         }
     </style>
 </head>
@@ -39,10 +39,10 @@
     <div>
         <input id="file-upload" onchange="execute()" type="file" />
 
-        <a id="download" download="file.xlsx">Download</a>
+        <a id="download">Download</a>
     </div>
 
-<script type="module">
+    <script type="module">
         import init, { main } from "./pkg/goddard_diets.js";
 
         init()
@@ -55,32 +55,16 @@
 
                     reader.onload = function (evt) {
                         const contents = new Uint8Array(evt.target.result);
-
-                        // console.log({ c: contents })
-
-                        
-
-                        console.log(btoa(main(contents)));
-
                         const downloadButton = document.getElementById("download");
+
                         downloadButton.href = `data:text/plain;base64,${btoa(String.fromCharCode.apply(null, main(contents)))}`
-                        // document.getElementById("fileContents").innerHTML = evt.target.result;
-                        // console.log({ res: evt.target.result });
+                        downloadButton.download = `${new Date().toISOString()}.xlsx`;
+
+                        downloadButton.click();
                     }
-
-
-                    // console.log({ file });
-                    // if (fileUpload)
-
                 }
-                // main("WebAssembly")
             });
-
-        
     </script>
-    
-
-    
 </body>
 
 </html>
